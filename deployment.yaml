@@ -8,14 +8,14 @@ spec:
   selector:
     matchLabels:
       app: flask-app
-    template:
-      metada:
-        labels:
-          app: flask-app
-      spec:
-        containers:
-        - name: flask-app
-          images: hirosetakahito/test-server 
-          imagePullPolicy: Always
-          ports:
-          - containerPort: 5000
+  template:
+    metadata:
+      labels:
+        app: flask-app
+    spec:
+      containers:
+      - name: flask-app
+        image: hirosetakahito/test-server 
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
