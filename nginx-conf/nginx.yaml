@@ -1,35 +1,42 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx
+  name: flask-nginx
 spec:
   selector:
     matchLabels:
-      app: nginx
-  replicas: 3
-  tempalte:
+      app: flask-nginx
+  replicas: 1
+  template:
     metadata:
       labels:
-        app: nginx
+        app: flask-nginx
     spec:
       containers:
       - name: nginx
         image: nginx:latest
         ports:
         - containerPort: 80
-      volumeMounts:
+        volumeMounts:
+        - name: server-conf
+          mountPath: /etc/nginx/conf.d/server.conf
+          subPath: server.conf
+      volumes:
       - name: server-conf
-        mountPath: /etc/nginx/conf.d/server.conf
-        subPath: server.conf
+        configMap:
+          name: server-conf
+          items:
+            - key: server.conf
+              path: server.conf
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: service
+  name: flask-nginx-service
 spec:
-  type: NodePort
+  type: ClusterIP
   ports:
     - port: 80
-      NodePort: 5000
+      targetPort: 5000
   selector:
-    app: nginx
+    app: flask-nginx
