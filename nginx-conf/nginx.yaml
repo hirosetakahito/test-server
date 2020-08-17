@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 3
+  tempalte:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+      volumeMounts:
+      - name: server-conf
+        mountPath: /etc/nginx/conf.d/server.conf
+        subPath: server.conf
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service
+spec:
+  type: NodePort
+  ports:
+    - port: 80
+      NodePort: 5000
+  selector:
+    app: nginx
